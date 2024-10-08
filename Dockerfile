@@ -3,7 +3,8 @@ FROM pytorch/pytorch:1.8.1-cuda11.1-cudnn8-devel
 COPY ./requirements.txt /tmp/requirements.txt
 ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Seoul
-# RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys <key>
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A4B469963BF863CC
+RUN sed -i 's@archive.ubuntu.com@mirror.kakao.com@g' /etc/apt/sources.list
 RUN apt-get update && \
     apt-get -y -qq update && \
     apt-get install -y apt-utils && \
@@ -27,8 +28,11 @@ RUN apt-get update && \
     apt-get install -y sshfs
 
 RUN pip install --upgrade pip
-RUN /bin/bash -c "bash <(curl -s https://raw.githubusercontent.com/konlpy/konlpy/master/scripts/mecab.sh) &&\
-                  pip install -r /tmp/requirements.txt --ignore-installed"
+RUN pip install --upgrade --user setuptools==58.3.0
+COPY ./mecab.sh /tmp/mecab.sh
+RUN ["chmod","+x","/tmp/mecab.sh"]
+RUN '/tmp/mecab.sh'
+RUN pip install -r /tmp/requirements.txt --ignore-installed
 RUN pip install --upgrade tensorboard
 RUN pip install jupyter -U
 

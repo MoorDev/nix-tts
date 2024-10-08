@@ -23,7 +23,7 @@
 2. `docker build --tag nix-tts:latest .`
 
 ## Training
-1. `nvidia-docker run -it --name 'nix-tts' -v /path/to/nix-tts:/home/work/nix-tts --ipc=host --privileged nix-tts:latest`
+1. `docker run -it --gpus all --name 'nix-tts' -v /path/to/nix-tts:/home/work/nix-tts --ipc=host --privileged nix-tts:latest`
 2. `cd /home/work/nix-tts/monotonic_align`
 3. `python setup.py build_ext --inplace`
 4. `cd /home/work/nix-tts`
